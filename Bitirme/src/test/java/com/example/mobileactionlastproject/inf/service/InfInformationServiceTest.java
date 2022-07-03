@@ -7,7 +7,6 @@ import com.example.mobileactionlastproject.inf.dto.InfInformationResultDto;
 import com.example.mobileactionlastproject.inf.entity.InfInformation;
 import com.example.mobileactionlastproject.inf.enums.EnumCity;
 import com.example.mobileactionlastproject.inf.service.entityservice.InfInformationEntityService;
-import com.example.mobileactionlastproject.rst.dto.DatePollutionDto;
 import com.example.mobileactionlastproject.rst.service.RestTemplateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
