@@ -1,20 +1,19 @@
 package com.example.mobileactionlastproject.inf.service;
 
 import com.example.mobileactionlastproject.inf.converter.InfInformationDataDtoConverter;
-import com.example.mobileactionlastproject.inf.converter.InfInformationSaveDtoConverter;
+import com.example.mobileactionlastproject.inf.converter.InfInformationConverter;
 import com.example.mobileactionlastproject.inf.dto.InfInformationDataDto;
 import com.example.mobileactionlastproject.inf.dto.InfInformationResultDto;
 import com.example.mobileactionlastproject.inf.entity.InfInformation;
 import com.example.mobileactionlastproject.inf.enums.EnumCity;
 import com.example.mobileactionlastproject.inf.service.entityservice.InfInformationEntityService;
+import com.example.mobileactionlastproject.rst.dto.DatePollutionDto;
 import com.example.mobileactionlastproject.rst.service.RestTemplateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -33,7 +32,7 @@ class InfInformationServiceTest {
     private InfInformationEntityService infInformationEntityService;
 
     @Mock
-    private InfInformationSaveDtoConverter infInformationSaveDtoConverter;
+    private InfInformationConverter infInformationSaveDtoConverter;
 
     @Mock
     private InfInformationDataDtoConverter infInformationDataDtoConverter;
@@ -108,4 +107,14 @@ class InfInformationServiceTest {
 
         assertEquals(2, result.getResults().size());
     }
+    
+    @Test
+    void shouldReturnAllDataFromAPICorrectly(){
+        LocalDate localDate1 = LocalDate.of(2022, 5, 12);
+        LocalDate localDate2 = LocalDate.of(2022, 5, 13);
+
+        restTemplateService.getPollutionInformationFromAPI(EnumCity.London, localDate1);
+    }
+    
+    
 }

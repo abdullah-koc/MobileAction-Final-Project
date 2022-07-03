@@ -2,10 +2,8 @@ package com.example.mobileactionlastproject.inf.service;
 
 
 import com.example.mobileactionlastproject.inf.converter.InfInformationDataDtoConverter;
-import com.example.mobileactionlastproject.inf.converter.InfInformationMapper;
-import com.example.mobileactionlastproject.inf.converter.InfInformationSaveDtoConverter;
+import com.example.mobileactionlastproject.inf.converter.InfInformationConverter;
 import com.example.mobileactionlastproject.inf.dto.InfInformationDataDto;
-import com.example.mobileactionlastproject.inf.dto.InfInformationSaveDto;
 import com.example.mobileactionlastproject.inf.entity.InfInformation;
 import com.example.mobileactionlastproject.inf.enums.EnumCity;
 import com.example.mobileactionlastproject.inf.service.entityservice.InfInformationEntityService;
@@ -21,12 +19,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class InfInformationService {
     private final InfInformationEntityService infInformationEntityService;
-    private final InfInformationSaveDtoConverter infInformationSaveDtoConverter;
+    private final InfInformationConverter infInformationConverter;
     private final InfInformationDataDtoConverter infInformationDataDtoConverter;
     private final RestTemplateService restTemplateService;
 
@@ -51,15 +51,12 @@ public class InfInformationService {
 
         List<InfInformation> existingData = getInfInformationsFromDB(city, startDate, endDate);
         List<InfInformation> newData = new ArrayList<>(existingData);
-        System.out.println(newData.size());
-        Period period = Period.between(startDate, endDate);
-        int days = Math.abs(period.getDays()) + 1;
+        long days = DAYS.between(startDate, endDate) + 1;
         for (int i = 0; i < days; i++) {
             LocalDate localDate = startDate.plusDays(i);
             if (existingData.stream().noneMatch(inf -> inf.getLocalDate().equals(localDate))) {
-                List<DatePollutionDto> datePollutionDtoList = restTemplateService.getPollutionInformationFromAPI(city, localDate, localDate);
-                InfInformationSaveDto infInformationSaveDto = infInformationSaveDtoConverter.convertToInfInformationSaveDto(datePollutionDtoList.get(0));
-                InfInformation infInformation = InfInformationMapper.INSTANCE.convertToInfInformation(infInformationSaveDto);
+                DatePollutionDto datePollutionDto = restTemplateService.getPollutionInformationFromAPI(city, localDate);
+                InfInformation infInformation = infInformationConverter.convertToInfInformation(datePollutionDto);
                 newData.add(infInformation);
                 save(infInformation);
                 log.info("City: {}, Date {}, was saved to DB (retrieved from API)", city, localDate);

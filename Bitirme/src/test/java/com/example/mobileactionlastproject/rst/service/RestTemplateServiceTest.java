@@ -61,20 +61,17 @@ class RestTemplateServiceTest {
 
     @Test
     void shouldGetPollutionInformationFromAPI() {
-        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.London, LocalDate.of(2022, 5, 12), LocalDate.of(2022, 5, 13)));
-        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Ankara, LocalDate.of(2022, 5, 12), LocalDate.of(2022, 5, 13)));
-        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Mumbai, LocalDate.of(2022, 5, 12), LocalDate.of(2022, 5, 13)));
-        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Tokyo, LocalDate.of(2022, 5, 12), LocalDate.of(2022, 5, 13)));
-        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Barcelona, LocalDate.of(2022, 5, 12), LocalDate.of(2022, 5, 13)));
-        //start date cannot be after end date, throws error
-        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () -> restTemplateService.getPollutionInformationFromAPI(EnumCity.London, LocalDate.of(2022, 5, 13), LocalDate.of(2022, 5, 12)));
-        assertEquals("Start date cannot be after end date", illegalArgumentException.getMessage());
+        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.London, LocalDate.of(2022, 5, 12)));
+        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Ankara, LocalDate.of(2022, 5, 12)));
+        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Mumbai, LocalDate.of(2022, 5, 12)));
+        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Tokyo, LocalDate.of(2022, 5, 12)));
+        assertNotNull(restTemplateService.getPollutionInformationFromAPI(EnumCity.Barcelona, LocalDate.of(2022, 5, 12)));
     }
 
     @Test
     void shouldThrowExceptionWhenNoCoordinateExist() {
         when(restTemplateService.getCoordinatesFromAPI(EnumCity.London)).thenReturn(null);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> restTemplateService.getPollutionInformationFromAPI(EnumCity.London, LocalDate.of(2022, 5, 12), LocalDate.of(2022, 5, 13)));
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> restTemplateService.getPollutionInformationFromAPI(EnumCity.London, LocalDate.of(2022, 5, 12)));
         assertEquals("Error occurred when getting coordinates for London", runtimeException.getMessage());
     }
 }

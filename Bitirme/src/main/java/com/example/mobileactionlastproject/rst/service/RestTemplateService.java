@@ -39,18 +39,16 @@ public class RestTemplateService {
         return Objects.requireNonNull(response.getBody()).length > 0 ? response.getBody()[0] : null;
     }
 
-    public List<DatePollutionDto> getPollutionInformationFromAPI
-            (EnumCity city, LocalDate startDate, LocalDate endDate){
+    public DatePollutionDto getPollutionInformationFromAPI
+            (EnumCity city, LocalDate localDate){
 
-        if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
-        }
 
         ZoneId zoneId = ZoneId.of("UTC");
-        long epochStart = startDate.atStartOfDay(zoneId).toEpochSecond();
+        long epochStart = localDate.atStartOfDay(zoneId).toEpochSecond();
 
-        LocalDate endDateIncluded = endDate.plusDays(1);
+        LocalDate endDateIncluded = localDate.plusDays(1);
         long epochEnd = endDateIncluded.atStartOfDay(zoneId).toEpochSecond();
+        epochEnd -= 60;
 
         LatLngDto coordinates = getCoordinatesFromAPI(city);
         if(coordinates == null){
@@ -66,9 +64,9 @@ public class RestTemplateService {
 
         List<HourlyPollutionDto> hourlyPollutionDtoList = Objects.requireNonNull(response.getBody()).getList();
 
-        List<DatePollutionDto> datePollutionDtoList = pollutionDtoConverter.convertToDatePollutionDtoList(hourlyPollutionDtoList, city);
+        DatePollutionDto datePollutionDto = pollutionDtoConverter.convertToDatePollutionDtoList(hourlyPollutionDtoList, city);
 
-        return datePollutionDtoList;
+        return datePollutionDto;
     }
 
     private SimpleClientHttpRequestFactory getSimpleClientHttpRequestFactory() {
