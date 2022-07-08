@@ -7,6 +7,7 @@ import com.example.mobileactionlastproject.inf.dto.InfInformationResultDto;
 import com.example.mobileactionlastproject.inf.entity.InfInformation;
 import com.example.mobileactionlastproject.inf.enums.EnumCity;
 import com.example.mobileactionlastproject.inf.service.entityservice.InfInformationEntityService;
+import com.example.mobileactionlastproject.rst.dto.DatePollutionDto;
 import com.example.mobileactionlastproject.rst.service.RestTemplateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,7 +113,49 @@ class InfInformationServiceTest {
         LocalDate localDate1 = LocalDate.of(2022, 5, 12);
         LocalDate localDate2 = LocalDate.of(2022, 5, 13);
 
-        restTemplateService.getPollutionInformationFromAPI(EnumCity.London, localDate1);
+        DatePollutionDto datePollutionDto1 = mock(DatePollutionDto.class);
+        DatePollutionDto datePollutionDto2 = mock(DatePollutionDto.class);
+
+        when(restTemplateService.getPollutionInformationFromAPI(EnumCity.London, localDate1)).thenReturn(datePollutionDto1);
+        when(restTemplateService.getPollutionInformationFromAPI(EnumCity.London, localDate2)).thenReturn(datePollutionDto2);
+
+        InfInformation infInformation1 = mock(InfInformation.class);
+        InfInformation infInformation2 = mock(InfInformation.class);
+
+        when(infInformation1.getLocalDate()).thenReturn(localDate1);
+        when(infInformation2.getLocalDate()).thenReturn(localDate2);
+
+        when(infInformationSaveDtoConverter.convertToInfInformation(datePollutionDto1)).thenReturn(infInformation1);
+        when(infInformationSaveDtoConverter.convertToInfInformation(datePollutionDto2)).thenReturn(infInformation2);
+
+        List<InfInformation> results = new ArrayList<>();
+        results.add(infInformation1);
+        results.add(infInformation2);
+
+        List<InfInformationResultDto> resultsDto = new ArrayList<>();
+        InfInformationResultDto infInformationResultDto1 = mock(InfInformationResultDto.class);
+        InfInformationResultDto infInformationResultDto2 = mock(InfInformationResultDto.class);
+
+
+        resultsDto.add(infInformationResultDto1);
+        resultsDto.add(infInformationResultDto2);
+
+        InfInformationDataDto infInformationDataDto = mock(InfInformationDataDto.class);
+        when(infInformationDataDto.getResults()).thenReturn(resultsDto);
+
+        when(infInformationDataDtoConverter.convertToInfInformationDataDto(results)).thenReturn(infInformationDataDto);
+
+        InfInformationDataDto result = infInformationService.queryByCityAndStartDateAndEndDate(EnumCity.London, localDate1, localDate2);
+
+        assertEquals(2, result.getResults().size());
+    }
+
+    @Test
+    void shouldDeleteByCityAndStartDateAndEndDate(){
+        LocalDate localDate1 = LocalDate.of(2022, 5, 12);
+        LocalDate localDate2 = LocalDate.of(2022, 5, 13);
+
+        assertDoesNotThrow(() -> infInformationService.deleteByCityAndBetweenDates(EnumCity.London, localDate1, localDate2));
     }
     
     

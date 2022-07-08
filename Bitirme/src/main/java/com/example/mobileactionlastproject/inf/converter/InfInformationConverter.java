@@ -4,6 +4,12 @@ import com.example.mobileactionlastproject.inf.entity.InfInformation;
 import com.example.mobileactionlastproject.rst.dto.DatePollutionDto;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
+
 @Service
 public class InfInformationConverter {
 

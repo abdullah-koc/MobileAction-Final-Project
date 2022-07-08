@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
 
 @Service
 public class InfInformationEntityService extends BaseEntityService<InfInformation, InfInformationDao> {
@@ -22,8 +25,9 @@ public class InfInformationEntityService extends BaseEntityService<InfInformatio
     }
 
     @Transactional
-    public void deleteByCityAndLocalDate(EnumCity city, LocalDate localDate) {
-        getDao().deleteByCityAndLocalDate(city, localDate);
+    public void deleteAllByCityAndLocalDateBetween(EnumCity city, LocalDate startDate, LocalDate endDate) {
+        getDao().deleteAllByCityAndLocalDateBetween(city, startDate, endDate);
     }
+
 
 }

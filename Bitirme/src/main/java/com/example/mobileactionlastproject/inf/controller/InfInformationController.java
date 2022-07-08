@@ -1,8 +1,6 @@
 package com.example.mobileactionlastproject.inf.controller;
 
-
 import com.example.mobileactionlastproject.inf.dto.InfInformationDataDto;
-import com.example.mobileactionlastproject.inf.entity.InfInformation;
 import com.example.mobileactionlastproject.inf.enums.EnumCity;
 import com.example.mobileactionlastproject.inf.service.InfInformationService;
 import com.example.mobileactionlastproject.rst.service.RestTemplateService;
@@ -11,10 +9,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
 
 @RestController
 @RequestMapping("/api/v1/information")

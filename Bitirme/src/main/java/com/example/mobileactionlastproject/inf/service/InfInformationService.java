@@ -20,6 +20,11 @@ import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +34,14 @@ public class InfInformationService {
     private final InfInformationDataDtoConverter infInformationDataDtoConverter;
     private final RestTemplateService restTemplateService;
 
+
+    /**
+     * This method is used to get the information of the pollution of the city.
+     * @param city {@link EnumCity}
+     * @param startDate {@link LocalDate}
+     * @param endDate {@link LocalDate}
+     * @return {@link InfInformationDataDto}
+     */
     public InfInformationDataDto queryByCityAndStartDateAndEndDate(EnumCity city, LocalDate startDate, LocalDate endDate) {
 
         if (startDate == null && endDate == null) {
@@ -38,26 +51,20 @@ public class InfInformationService {
             throw new IllegalArgumentException("startDate and endDate must be both null or both not null");
         }
 
-        if (startDate.isBefore(LocalDate.of(2020, 11, 27))) {
-            throw new IllegalArgumentException("Start date cannot be before 2020-11-27");
-        }
-        if (endDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("End date cannot be after today");
-        }
-        if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
-        }
+        checkValidityOfDates(startDate, endDate);
 
         List<InfInformation> existingData = getInfInformationsFromDB(city, startDate, endDate);
         List<InfInformation> newData = new ArrayList<>(existingData);
         long days = DAYS.between(startDate, endDate) + 1;
         for (int i = 0; i < days; i++) {
             LocalDate localDate = startDate.plusDays(i);
+
+            //if there is no match in the DB, get data from API and save it to DB
             if (existingData.stream().noneMatch(inf -> inf.getLocalDate().equals(localDate))) {
                 DatePollutionDto datePollutionDto = restTemplateService.getPollutionInformationFromAPI(city, localDate);
                 InfInformation infInformation = infInformationConverter.convertToInfInformation(datePollutionDto);
                 newData.add(infInformation);
-                save(infInformation);
+                infInformationEntityService.save(infInformation);
                 log.info("City: {}, Date {}, was saved to DB (retrieved from API)", city, localDate);
             }
             else{
@@ -65,11 +72,20 @@ public class InfInformationService {
             }
         }
 
+        //sort output by date
         newData.sort(Comparator.comparing(InfInformation::getLocalDate));
 
         return infInformationDataDtoConverter.convertToInfInformationDataDto(newData);
     }
 
+
+    /**
+     * This method is used to get the information of the pollution of the city from DB.
+     * @param city {@link EnumCity}
+     * @param startDate {@link LocalDate}
+     * @param endDate {@link LocalDate}
+     * @return {@link List<InfInformation>}
+     */
     public List<InfInformation> getInfInformationsFromDB(EnumCity city, LocalDate startDate, LocalDate endDate) {
         List<InfInformation> existingData = new ArrayList<>();
         LocalDate tempDate = startDate;
@@ -83,20 +99,32 @@ public class InfInformationService {
         return existingData;
     }
 
+    /**
+     * This method is used to delete the information of the pollution of the city from DB (if exists).
+     * @param city {@link EnumCity}
+     * @param startDate {@link LocalDate}
+     * @param endDate {@link LocalDate}
+     */
     public void deleteByCityAndBetweenDates(EnumCity city, LocalDate startDate, LocalDate endDate) {
-        LocalDate tempDate = startDate;
-        while (tempDate.isBefore(endDate.plusDays(1))) {
-            deleteByCityAndLocalDate(city, tempDate);
-            tempDate = tempDate.plusDays(1);
+        checkValidityOfDates(startDate, endDate);
+        infInformationEntityService.deleteAllByCityAndLocalDateBetween(city, startDate, endDate);
+    }
+
+    /**
+     * This method checks if start date and end date combination is valid.
+     * @param startDate {@link LocalDate}
+     * @param endDate {@link LocalDate}
+     */
+    private void checkValidityOfDates(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isBefore(LocalDate.of(2020, 11, 27))) {
+            throw new IllegalArgumentException("Start date cannot be before 2020-11-27");
         }
-    }
-
-    private InfInformation save(InfInformation infInformation) {
-        return infInformationEntityService.save(infInformation);
-    }
-
-    private void deleteByCityAndLocalDate(EnumCity city, LocalDate localDate) {
-        infInformationEntityService.deleteByCityAndLocalDate(city, localDate);
+        if (endDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("End date cannot be after today");
+        }
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
     }
 
 }

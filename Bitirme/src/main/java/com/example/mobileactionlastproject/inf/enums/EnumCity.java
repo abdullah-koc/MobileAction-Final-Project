@@ -1,5 +1,10 @@
 package com.example.mobileactionlastproject.inf.enums;
 
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
+
 public enum EnumCity {
 
     London ("London"),

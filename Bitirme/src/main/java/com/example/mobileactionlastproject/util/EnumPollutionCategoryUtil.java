@@ -4,6 +4,11 @@ import com.example.mobileactionlastproject.inf.enums.EnumPollutionCategory;
 
 import java.math.BigDecimal;
 
+/**
+ * This class includes utility methods for converting from {@link BigDecimal} to {@link EnumPollutionCategory}.
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
 public class EnumPollutionCategoryUtil {
 
     public static EnumPollutionCategory convertCOToEnum(BigDecimal value) {

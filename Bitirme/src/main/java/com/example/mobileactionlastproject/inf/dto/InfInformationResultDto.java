@@ -6,6 +6,11 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
+
 @Data
 public class InfInformationResultDto {
     @JsonProperty("Date")

@@ -11,6 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author Muhammet Abdullah Koç
+ * @since 1.0
+ */
+
 @Service
 public class InfInformationDataDtoConverter {
 
@@ -39,6 +45,12 @@ public class InfInformationDataDtoConverter {
     }
 
 
+    /**
+     * This method is used to get categories from infInformation object.
+     * For each pollution type, district Dtos are used in order to make output look like in the assignment.
+     * @param infInformation {@link InfInformation}
+     * @return {@link List<Object>}
+     */
     private List<Object> getCategories(InfInformation infInformation) {
         List<Object> categories = new ArrayList<>();
 
