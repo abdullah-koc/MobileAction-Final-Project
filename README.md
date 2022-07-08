@@ -2,7 +2,7 @@
 
 Muhammet Abdullah Koç
 
-## Note: Because IP's are changing, you need to change IP address of postgres configuration at application.properties before running the application.
+## Note: Because IP's are changing, you need to change IP address of postgres configuration at application.properties before running the application. Also, postgresql username, password, and database information should be updated before run.
 
 
 Screenshots
