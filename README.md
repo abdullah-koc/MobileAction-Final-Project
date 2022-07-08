@@ -2,16 +2,19 @@
 
 Muhammet Abdullah Koç
 
+## Note: Because IP's are changing, you need to change IP address of postgres configuration at application.properties before running the application.
+
+
 Screenshots
 
-##Getting information
+## Getting information
 ![Screenshot](Request1.jpg)
 
-##Response
+## Response
 ![Screenshot](Request1Response.jpg)
 
-##Delete request
+## Delete request
 ![Screenshot](Request2.jpg)
 
-##Logging
+## Logging
 ![Screenshot](Logging.jpg)
