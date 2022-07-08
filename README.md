@@ -5,7 +5,7 @@ Muhammet Abdullah Koç
 Screenshots
 
 ##Getting information
-![Screenshot](Request 1.jpg)
+![Screenshot](Request1.jpg)
 
 ##Response
 ![Screenshot](Request1Response.jpg)
